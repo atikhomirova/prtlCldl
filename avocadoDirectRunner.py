@@ -10,9 +10,6 @@ input = 'gs://baketto1/avoado.csv'
 
 output = 'micro-store-218714:avocadoDataset.avocado'
 
-PROJECT = 'micro-store-218714'
-BUCKET = 'baketto1'
-
 
 class FormatAsTableRow(beam.DoFn):
     def process(self, line):
@@ -35,19 +32,10 @@ class FormatAsTableRow(beam.DoFn):
         yield [z]
 
 
-def run():
+def run(argv=None):
     """Build and run the pipeline."""
 
-    pipelineOptions = [
-        '--project={0}'.format(PROJECT),
-        '--job_name=avocadoJob',
-        '--save_main_session',
-        '--staging_location=gs://{0}/staging/'.format(BUCKET),
-        '--temp_location=gs://{0}/staging/'.format(BUCKET),
-        '--runner=DataflowRunner'
-    ]
-
-    with beam.Pipeline(argv=argv) as p:
+    with beam.Pipeline(argv=sys.argv) as p:
 
         # Read the text from CSV file.
         lines = p | 'Read' >> beam.io.ReadFromText(input)
