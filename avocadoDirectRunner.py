@@ -6,9 +6,9 @@ import apache_beam as beam
 
 schema = ('Index:INTEGER, Date:STRING, AveragePrice:FLOAT, TotalVolume:FLOAT, N4046:FLOAT, N4225:FLOAT, N4770:FLOAT, TotalBags:FLOAT, SmallBags:FLOAT, LargeBags:FLOAT, XLargeBags:FLOAT, type:STRING, year:INTEGER, region:STRING')
 
-input = 'gs://baketto1/avoado.csv'
+input = 'gs://baketto1/avocado.csv'
 
-output = 'micro-store-218714:avocadoDataset.avocado'
+output = 'micro-store-218714:avocadoDataset.avocado3'
 
 
 class FormatAsTableRow(beam.DoFn):
@@ -29,7 +29,7 @@ class FormatAsTableRow(beam.DoFn):
         z["type"] = str(l[11])
         z["year"] = int(l[12])
         z["region"] = str(l[13])
-        yield [z]
+        return [z]
 
 
 def run(argv=None):
