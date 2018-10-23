@@ -1,26 +1,43 @@
-class myTableRow:
+def trim_whitespaces(dct, name):
+    line = dct[name]
+    dct[name] = line.strip()
+    return dct
 
-    def __init__(self, row):
-        self.row = row
+def remove_extra_whitespaces(dct, name):
+    line = dct[name]
+    dct[name] = ' '.join(line.split())
+    return dct
 
-    def trim_whitespaces(self, name):
-        line = self.row[name]
-        self.row[name] = line.strip()
+def skip_row_by_value(dct, name, arg):
+    if arg in dct[name]:
+        return None
+    else:
+        return dct
 
-    def remove_extra_whitespaces(self, name):
-        line = self.row[name]
-        self.row[name] = ' '.join(line.split())
+def call_function_from_str(str_function, dct, name):
+    try:
+        function, arg = str_function.split(',')
+        dct = eval(function)(dct, name, arg)
+    except:
+        function = str_function
+        dct = eval(function)(dct, name)
 
-    def skip_row_by_value(self, name):
-        if '42' in self.row[name]:
-            return None
-        else:
-            pass
+    return dct
+
+dct = {}
+dct["ID"] = 1
+dct["FirstName"] = '    _Anastasiya_       '
+dct["LastName"] = '  _Tsikhamirava_   '
+dct["Address"] = '       _Parnikovaya    s       3       2     42_                '
+name = 'LastName'
+
+d = call_function_from_str('skip_row_by_value,42', dct, name)
+print(d)
 
 
-config = {'FirstName': ('trim_whitespaces',), 
-          'LastName': ('trim_whitespaces',),
-          'Address': ('trim_whitespaces', 'remove_extra_whitespaces')}
+config = {'FirstName': ['trim_whitespaces'],
+          'LastName': ['trim_whitespaces'],
+          'Address': ['trim_whitespaces', 'remove_extra_whitespaces', 'skip_row_by_value,42']}
 
 
 def process():
@@ -30,19 +47,12 @@ def process():
     dct["LastName"] = '  _Tsikhamirava_   '
     dct["Address"] = '       _Parnikovaya    s       3       2     42_                '
 
-    row = myTableRow(dct)
-    print(row)
-
     for name in config.keys():
-        print(name)
         functions = config[name]
         for function in functions:
-            print(function)
-            method = getattr(row, function)
-            print(method)
-            row.method(name)
+            dct = call_function_from_str(str_function, dct, name)
 
-    return row
+    return [dct]
 
-d = process()
-print(d)
+#d = process()
+#print(d)
