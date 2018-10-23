@@ -18,7 +18,11 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
+    'retry_delay': datetime.timedelta(minutes=5)
+    dataflow_default_options={
+        "project": 'micro-store-218714',
+        "zone": 'us-west1-b',
+        "stagingLocation": 'gs://baketto1/staging'
 }
 
 dag = DAG(

@@ -50,7 +50,7 @@ def run():
     with beam.Pipeline(argv=argv) as p:
 
         # Read the text from CSV file.
-        lines = p | 'Read' >> beam.io.ReadFromText(input)
+        lines = p | 'Read' >> beam.io.ReadFromText(input, skip_header_lines=1)
 
         transformed = lines | beam.ParDo(FormatAsTableRow())
 
