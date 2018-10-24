@@ -10,6 +10,7 @@ output = 'micro-store-218714:person.personsExtendedTransformedDataflow2'
 PROJECT = 'micro-store-218714'
 BUCKET = 'baketto1'
 
+
 def trim_whitespaces(line):
     return line.strip()
 
@@ -22,32 +23,31 @@ def skip_row_with_value(line, value_to_skip):
     else:
         return line
 
+def call_function_from_str(str_function, dct, name):
+    try:
+        function, arg = str_function.split(',') #How an argument should be put in config?
+        dct = eval(function)(dct, name, arg)
+    except:
+        function = str_function
+        dct = eval(function)(dct, name)
+
+    return dct
+
 
 config = {'FirstName': ('trim_whitespaces'),
           'LastName': ('trim_whitespaces'),
-          'Address': ('trim_whitespaces', 'remove_extra_whitespaces', 'skip_row_with_value(42)')}
+          'Address': ('trim_whitespaces', 'remove_extra_whitespaces', 'skip_row_with_value,42')}
 
 
 class FormatAsTableRow(beam.DoFn):
     def process(self, line):
         dct = line.copy()
 
-        #for name, value in dct.iteritems():
-        #    if name in config.keys():
-        #        functions = config[name]
-        #        for function in functions:
-        #            value  = eval(function + '(value)')
-        #        dct[name] = value
-
-        #return [dct]
-
         for name in config.keys():
-            if name in dct.keys():
-                functions = config[name]
-                value = dct[name]
-                for function in functions:
-                    value  = eval(function + '(value)')
-                dct[name] = value
+            functions = config[name]
+            for function in functions:
+                if dct is not None:
+                    dct = call_function_from_str(function, dct, name)
 
         return [dct]
 
@@ -69,8 +69,6 @@ def run():
 
         # Read the text from CSV file.
         lines = p | 'ReadFromBQ' >> beam.io.Read(beam.io.BigQuerySource(input))
-        #query = 'SELECT * FROM person.personOriginal'
-        #lines = p | 'ReadFromBQ' >> beam.io.Read(beam.io.BigQuerySource(project=PROJECT, use_standard_sql=False, query=query))
 
         transformed = lines | 'Transform' >> beam.ParDo(FormatAsTableRow())
 
