@@ -1,11 +1,12 @@
+
 import logging
 import apache_beam as beam
 
 schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
 
-input = 'gs://baketto1/persons_reduced_42.csv'
+input = 'gs://baketto1/person_extended_42.csv'
 
-output = 'micro-store-218714:person.personsReduced42'
+output = 'micro-store-218714:person.personFull42'
 
 PROJECT = 'micro-store-218714'
 BUCKET = 'baketto1'
@@ -19,7 +20,8 @@ class FormatAsTableRow(beam.DoFn):
         dct["FirstName"] = str(l[1])
         dct["LastName"] = str(l[2])
         dct["Address"] = str(l[3])
-        return None
+
+        return [dct]
 
 
 def run():
@@ -27,12 +29,12 @@ def run():
 
     pipelineOptions = [
         '--project={0}'.format(PROJECT),
-        '--job_name=person-reduced',
+        '--job_name=person-full-42',
         '--save_main_session',
         '--staging_location=gs://{0}/staging/'.format(BUCKET),
         '--temp_location=gs://{0}/staging/'.format(BUCKET),
-        '--runner=DirectRunner'
-        # '--runner=DataflowRunner'
+        # '--runner=DirectRunner'
+        '--runner=DataflowRunner'
         ]
 
     with beam.Pipeline(argv=pipelineOptions) as p:
