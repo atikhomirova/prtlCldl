@@ -28,12 +28,11 @@ def skip_row_with_value(dct, name, arg):
         return dct
 
 def call_function_from_str(str_function, dct, name):
-    try:
+    if ',' in str_function:
         function, arg = str_function.split(',') #How an argument should be put in config?
         dct = eval(function)(dct, name, arg)
-    except:
-        function = str_function
-        dct = eval(function)(dct, name)
+    else:
+        dct = eval(str_function)(dct, name)
 
     return dct
 
