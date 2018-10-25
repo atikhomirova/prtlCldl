@@ -2,11 +2,10 @@
 import logging
 import apache_beam as beam
 
-schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
+#schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
 
 input = 'gs://baketto1/person_extended_42.csv'
 
-output = 'micro-store-218714:person.personFull42'
 
 PROJECT = 'micro-store-218714'
 BUCKET = 'baketto1'
@@ -40,7 +39,7 @@ def run():
 
     pipelineOptions = [
         '--project={0}'.format(PROJECT),
-        '--job_name=person-full-42',
+        '--job_name=person-csv_no_schema',
         '--save_main_session',
         '--staging_location=gs://{0}/staging/'.format(BUCKET),
         '--temp_location=gs://{0}/staging/'.format(BUCKET),
