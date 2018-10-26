@@ -13,7 +13,7 @@ output = 'micro-store-218714:person.personsReduced42'
 
 PROJECT = 'micro-store-218714'
 BUCKET = 'baketto1'
-
+JOB_NAME = 'person-dataflow_through-airflow'
 
 class FormatAsTableRow(beam.DoFn):
     def process(self, line):
@@ -23,7 +23,7 @@ class FormatAsTableRow(beam.DoFn):
         dct["FirstName"] = str(l[1])
         dct["LastName"] = str(l[2])
         dct["Address"] = str(l[3])
-        #hello_world()
+        hello_world()
         return [dct]
 
 
@@ -32,14 +32,14 @@ def run():
 
     pipelineOptions = [
         '--project={0}'.format(PROJECT),
-        '--job_name=person-full-42',
+        '--job_name={0}'.format(JOB_NAME)',
         '--save_main_session',
         '--staging_location=gs://{0}/staging/'.format(BUCKET),
         '--temp_location=gs://{0}/staging/'.format(BUCKET),
         '--setup_file ./setup.py',
         '--streaming',
-        '--runner=DirectRunner'
-        #'--runner=DataflowRunner'
+        #'--runner=DirectRunner'
+        '--runner=DataflowRunner'
         ]
 
     with beam.Pipeline(argv=pipelineOptions) as p:
