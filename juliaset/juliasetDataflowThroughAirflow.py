@@ -1,8 +1,8 @@
 import datetime
 import logging
 
-from airflow import DAG
-from airflow.contrib.operators.dataflow_operator import DataFlowPythonOperator
+from airflow import models
+
 
 # --------------------------------------------------------------------------------
 # Set default arguments
@@ -18,21 +18,22 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
-    'dataflow_default_options': {
+    'retry_delay': datetime.timedelta(minutes=5)
+    dataflow_default_options={
         "project": 'micro-store-218714',
-        "zone": 'us-east1-b',
-        "stagingLocation": 'gs://baketto1/staging'}
+        "zone": 'us-west1-b',
+        "stagingLocation": 'gs://baketto1/staging'
 }
 
 dag = DAG(
-    dag_id='juliaset', 
+    dag_id='', 
     default_args=default_args, 
     schedule_interval=None
     )
 
 task1 = DataFlowPythonOperator(
     task_id='trigger_dataflow_from_airflow',
-    py_file='gs://baketto1/juliaset/juliaset_main.py',
+    py_file='gs://baketto1/avocadoDataflow.py',
+    gcp_conn_id='default_google_cloud_connection',
     dag=dag
 )
