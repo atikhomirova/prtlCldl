@@ -9,4 +9,4 @@ def llist_blobs(bucket_name, prfx):
     return blobs
 
 def hello_world():
-    return "Hello world!"
+    print "Hello world!"
