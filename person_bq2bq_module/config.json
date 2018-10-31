@@ -1,0 +1,10 @@
+{
+  "FirstName": ["trim_whitespaces"],
+  "LastName": ["trim_whitespaces"],
+  "Address": [
+    "skip_row_with_value,42",
+    "trim_whitespaces",
+    "remove_extra_whitespaces"
+]
+
+}
