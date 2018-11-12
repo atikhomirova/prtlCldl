@@ -16,20 +16,20 @@ from cleansing.cleansing import *
 schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
 
 input = 'micro-store-218714:person.personFull42'
-output = input + 'Transformed'
+output = input + 'Transformed4'
 
 
 BUCKET_URL = 'gs://baketto1'  
 PROJECT_ID = 'micro-store-218714'  
-JOB_NAME = 'person-bq2bq-test'
-CONFIG_PATH = '/home/airflow/gcs/dags/person_bq2bq_module/config.json'
+JOB_NAME = 'person-bq2bq-test7'
+CONFIG = 'config.json'
 
 
-with open(CONFIG_PATH) as json_data:
+with open(CONFIG) as json_data:
     config = json.load(json_data)
-    logging.info(config)
+    #logging.info(config)
 
-
+'''
 def call_function_from_str(str_function, dct, name):
     if ',' in str_function:
         function, arg = str_function.split(',') #How an argument should be put in config?
@@ -37,16 +37,18 @@ def call_function_from_str(str_function, dct, name):
     else:
         dct = eval(str_function)(dct, name)
     return dct
-
+'''
 
 class FormatAsTableRow(beam.DoFn):
     def process(self, line):
         dct = line.copy()
 
-        for name in config.keys():
+        for name in config:
             functions = config[name]
             for function in functions:
+                #logging.info(function)                
                 dct = call_function_from_str(function, dct, name)
+                #logging.info(dct)                
                 if dct is None:
                     return None
 
@@ -72,13 +74,14 @@ def run(argv=None):
     parser.add_argument(
         '--runner',
         dest='runner',
-        default='DirectRunner',
+        default='DataflowRunner',
         help='DirectRunner or DataflowRunner')
 
     known_args, extra_pipeline_options = parser.parse_known_args(argv)
 
     pipeline_options = PipelineOptions()
     pipeline_options.view_as(SetupOptions).save_main_session = True
+    pipeline_options.view_as(SetupOptions).setup_file = './setup.py'
 
     logging.info('Basic pipeline options ready')
 
@@ -88,10 +91,10 @@ def run(argv=None):
     google_cloud_options.staging_location = BUCKET_URL + '/staging'
     google_cloud_options.temp_location = BUCKET_URL + '/temp'
 
-    logging.info('Google cloud pipeline options are ready')
-    logging.info(known_args.runner, type(known_args.runner))    
+    logging.info('Google cloud pipeline options are ready')  
 
     pipeline_options.view_as(StandardOptions).runner = known_args.runner
+    #pipeline_options.view_as(StandardOptions).streaming = True
 
     logging.info('Runner is set') 
 
@@ -100,6 +103,7 @@ def run(argv=None):
 
         # Read the text from CSV file.
         lines = p | 'ReadFromBQ' >> beam.io.Read(beam.io.BigQuerySource(input))
+        #logging.info(lines)
 
         transformed = lines | 'Transform' >> beam.ParDo(FormatAsTableRow())
 
@@ -108,7 +112,7 @@ def run(argv=None):
             output,
             schema=schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE)
+            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND)
 
 
 if __name__ == '__main__':

@@ -34,12 +34,12 @@ dag = DAG(
 
 task1 = DataFlowPythonOperator(
     task_id='person_bq2bq_dataflow',
-    py_file='/home/airflow/gcs/dags/person_bq2bq_module/person_bq2bq.py',
+    py_file='/home/airflow/gcs/dags/person_bq2bq_module/person_bq2bq_config.py',
     dag=dag
 )
 
-task2 = DataFlowPythonOperator(
-    task_id='person_bq2bq_dataflow_copy',
-    py_file='/home/airflow/gcs/dags/person_bq2bq_module/person_bq2bq_copy.py',
-    dag=dag
-)
+#task2 = DataFlowPythonOperator(
+#    task_id='person_bq2bq_dataflow_copy',
+#    py_file='/home/airflow/gcs/dags/person_bq2bq_module/person_bq2bq_copy.py',
+#    dag=dag
+#)
