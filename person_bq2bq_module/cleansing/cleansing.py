@@ -35,9 +35,7 @@ def remove_extra_whitespaces(dct, name):
 
 
 def skip_row_with_value(dct, name, arg):
-    if dct.get(name) is not None and arg in dct.get(name):
-        dct = None
-    return dct
+    return None if (dct.get(name) is not None and arg in dct.get(name)) else dct
     
     
 cleansing_functions = {'trim_whitespaces': trim_whitespaces,

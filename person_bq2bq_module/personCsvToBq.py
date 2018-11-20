@@ -10,8 +10,6 @@ from apache_beam.options.pipeline_options import (GoogleCloudOptions,
                                                   StandardOptions,
                                                   WorkerOptions)
 
-from cdb_lib.cdb_lib import hello_world, llist_blobs
-hello_world()
 
 schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
 
@@ -28,16 +26,9 @@ PROJECT_ID = 'micro-store-218714'  # replace with your project id
 JOB_NAME = 'person-test'  # replace with your job name
 
 
-def test_hello_world():
-    hello_world()
-
 
 class FormatAsTableRow(beam.DoFn):
     def process(self, line):
-        test_hello_world()
-        hello_world()
-        logging.info(dir())
-        logging.info('___________________finished test_hello_world')
         l = line.split(',')
         dct = {}
         dct["ID"] = int(l[0])
