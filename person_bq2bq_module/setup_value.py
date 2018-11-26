@@ -44,8 +44,7 @@ class CustomCommands(setuptools.Command):
 REQUIRED_PACKAGES = []
 
 setuptools.setup(
-    #name='cleansing',
-    name='cleansing_value',    
+    name='cleansing_value',
     version='0.0.1',
     #install_requires=['pandas==0.22.0', 'numpy==1.14.2'],
     packages=setuptools.find_packages(),
