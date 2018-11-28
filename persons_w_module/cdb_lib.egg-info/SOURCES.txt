@@ -1,0 +1,8 @@
+setup.py
+cdb_lib/__init__.py
+cdb_lib/cdb_lib.py
+cdb_lib.egg-info/PKG-INFO
+cdb_lib.egg-info/SOURCES.txt
+cdb_lib.egg-info/dependency_links.txt
+cdb_lib.egg-info/requires.txt
+cdb_lib.egg-info/top_level.txt

@@ -44,9 +44,9 @@ class CustomCommands(setuptools.Command):
 REQUIRED_PACKAGES = []
 
 setuptools.setup(
-    name='cdb_lib',
+    name='cleansing',
     version='0.0.1',
-    install_requires=['pandas==0.22.0', 'numpy==1.14.2'],
+    #install_requires=['pandas==0.22.0', 'numpy==1.14.2'],
     packages=setuptools.find_packages(),
     cmdclass={
         # Command class instantiated and run during pip install scenarios.

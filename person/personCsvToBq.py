@@ -1,15 +1,12 @@
-from __future__ import absolute_import
 
 import logging
 import apache_beam as beam
 
-from cdb_lib import cdb_lib.hello_world
-
 schema = ('ID:INTEGER, FirstName:STRING, LastName:STRING, Address:STRING')
 
-input = 'gs://baketto1/persons_reduced_42.csv'
+input = 'gs://baketto1/person_extended_42.csv'
 
-output = 'micro-store-218714:person.personsReduced42'
+output = 'micro-store-218714:person.personFull42'
 
 PROJECT = 'micro-store-218714'
 BUCKET = 'baketto1'
@@ -23,7 +20,7 @@ class FormatAsTableRow(beam.DoFn):
         dct["FirstName"] = str(l[1])
         dct["LastName"] = str(l[2])
         dct["Address"] = str(l[3])
-        cdb_lib.hello_world()
+
         return [dct]
 
 
@@ -36,9 +33,8 @@ def run():
         '--save_main_session',
         '--staging_location=gs://{0}/staging/'.format(BUCKET),
         '--temp_location=gs://{0}/staging/'.format(BUCKET),
-        '--setup_file ./setup.py',
-         '--runner=DirectRunner'
-        #'--runner=DataflowRunner'
+        # '--runner=DirectRunner'
+        '--runner=DataflowRunner'
         ]
 
     with beam.Pipeline(argv=pipelineOptions) as p:

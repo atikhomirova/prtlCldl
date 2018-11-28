@@ -46,7 +46,7 @@ class FormatAsTableRow(beam.DoFn):
     def process(self, line):
         dct = line.copy()
 
-        for name in config:
+        for name in config.keys():
             functions = config[name]
             for function in functions:
                 dct = call_function_from_str(function, dct, name)
